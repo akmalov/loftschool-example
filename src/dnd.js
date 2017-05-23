@@ -23,6 +23,31 @@ let homeworkContainer = document.querySelector('#homework-container');
  * @return {Element}
  */
 function createDiv() {
+    let newDiv = document.createElement('div');
+
+    function getRandomPixels(m) {
+        return Math.floor(Math.random() * m + 80) + 'px';
+    }
+
+    function getRandomColor() {
+        let letters = '0123456789ABCDEF';
+        let color = '#';
+
+        for (let i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        return color;
+    }
+
+    newDiv.classList.add('draggable-div');
+    newDiv.style.width = getRandomPixels(400);
+    newDiv.style.height = getRandomPixels(400);
+    newDiv.style.top = getRandomPixels(200);
+    newDiv.style.left = getRandomPixels(200);
+    newDiv.style['background-color'] = getRandomColor();
+
+    return newDiv;
 }
 
 /**
@@ -31,6 +56,27 @@ function createDiv() {
  * @param {Element} target
  */
 function addListeners(target) {
+    let moveElement = false;
+    let deltaX, deltaY;
+
+    target.addEventListener('mousedown', function(e) {
+        e.target.classList.add('clicked');
+        moveElement = true;
+        deltaX = e.clientX - e.target.offsetLeft;
+        deltaY = e.clientY - e.target.offsetTop
+    });
+
+    target.addEventListener('mouseup', function(e) {
+        e.target.classList.remove('clicked');
+        moveElement = false
+    });
+
+    target.addEventListener('mousemove', function(e) {
+        if (moveElement) {
+            e.target.style.top = `${e.clientY - deltaY}px`;
+            e.target.style.left = `${e.clientX - deltaX}px`;
+        }
+    })
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
